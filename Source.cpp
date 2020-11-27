@@ -1,51 +1,136 @@
-#include <iostream>
-#include <string>
 
+#include <iostream>
+#include <stdio.h>
+#include <string>
 using namespace std; 
 
-class Procesor
+class Press
 {
-	friend ostream& operator<<(ostream& os, Procesor& proc); 
-public: 
-	Procesor(string name= "no name",	int frequency = 0, string  production = "production", double memory = 1);
-	Procesor(const Procesor& procesor); 
-	void Write(); 
+	friend ostream& operator<<(ostream& os, Press& press);
+	friend istream& operator>>(istream& is, Press& press); 
 
-private: 
-	string m_Name; 
-	int m_Frequency; 
-	string  m_Production;
-	double m_Memory;
+public:
+
+	Press(string t = "nontitle", int c = 0, int idx = 00000, int freq = 0 ):
+		title(t), circulation(c), index(idx), frequency(freq)
+	{}
+
+	Press(const Press& press)
+	{
+		this->title = press.title;
+		this->circulation = press.circulation; 
+		this->index = press.index; 
+		this->frequency = press.frequency; 
+	}
+	
+
+	Press& operator= (const Press& press)
+	{
+		if (this->title == press.title  && this->circulation==press.circulation && this->index == press.index && this->frequency==press.frequency)
+		{
+			return *this; 
+		}
+		else
+		{
+			this->title = press.title;
+			this->circulation = press.circulation;
+			this->index = press.index;
+			this->frequency = press.frequency;
+		}
+	}
+	
+
+protected: 
+	string title;
+	int circulation;// тираж
+	int index;
+    int frequency;//переодичность издания 
 
 };
 
-Procesor:: Procesor(string name , int frequency , string  production , double memory): 
-	m_Name(name), m_Frequency(frequency), m_Production(production), m_Memory(memory)
-{}
 
-Procesor::Procesor(const Procesor& procesor)
+ostream& operator<<(ostream& os, Press& press)
 {
-	this->m_Name = procesor.m_Name; 
-	this->m_Frequency = procesor.m_Frequency;
-	this->m_Production = procesor.m_Production; 
-	this->m_Memory = procesor.m_Memory; 
-}
-
-ostream& operator<<(ostream& os, Procesor& procesor)
-{
-	cout << "\nName of procesor is " << procesor.m_Name ; 
-	cout << "\nIts frequency is " << procesor.m_Frequency << " Hz"; 
-	cout << "\nthe production technology used is " << procesor.m_Production ; 
-	cout << "\nits internal memory is " << procesor.m_Memory << endl; 
+	cout << "\nTitle : " << press.title << endl;
+	cout << "Circulation : " << press.circulation << endl;
+	cout << "Index : " << press.index << endl;
+	cout << "Frequency : " << press.frequency <<" times in the moth"<< endl;
 
 	return os;
 }
 
+istream& operator>>(istream& is, Press& press)
+{
+
+	cout << "\nWrite a title: ";
+	is >> press.title;
+	cout << "\nWrite the circulation: ";
+	is >> press.circulation;
+	cout << "\nWrite the index: ";
+	is >> press.index;
+	cout << "\nWrite the frequency times in the month: ";
+	is >> press.frequency;
+	return is;
+}
+
+class Newspaper : public Press
+{
+	friend istream& operator>>(istream& is, Press& press); 
+	friend ostream& operator<<(ostream& os, Press& press); 
+public:
+	Newspaper(string t = "newspaper", int c= 20, int idx=1000, int freq=2):
+		Press(t,c,idx,freq)
+	{}
+	Newspaper(const Newspaper& news):
+		Press(news)
+	{}
+
+};
+class Magazine : public Press
+{
+
+	friend istream& operator>>(istream& is, Press& press);
+	friend ostream& operator<<(ostream& os, Press& press);
+public:
+	Magazine(string t = "magazine", int c = 20, int idx = 1000, int freq = 2) :
+		Press(t, c, idx, freq)
+	{}
+	Magazine(const Magazine& mag) :
+		Press(mag)
+	{}
+};
+
+class IntEdition : public Press
+{
+	friend istream& operator>>(istream& is, Press& press);
+	friend ostream& operator<<(ostream& os, Press& press);
+public:
+	IntEdition(string t = "electronic magazine", int c = 20, int idx = 1000, int freq = 2) :
+		Press(t, c, idx, freq)
+	{}
+	IntEdition(const IntEdition& internet) :
+		Press(internet)
+	{}
+};
+
+
 
 int main()
 {
-	Procesor p1, p2("Intel core i7", 8, "7nnm tech proces", 16); 
-	cout << p1 << p2; 
+	Press p1("Poem", 200, 3462, 2), p2; 
+	cout << p1; 
+	cin >> p2; 
+	cout << p2; 
+	p1 = p2; 
+	cout << p1;
+	//Newspaper n1("Phisics", 4000, 19384, 3), n2;
+	//cout << n1; 
+	////cin >> n2; 
+	//cout << n2; 
+	//Magazine m1; 
+	//IntEdition e1; 
+	//cout << m1<< e1; 
+
 
 	return 0; 
 }
